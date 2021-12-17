@@ -8,11 +8,7 @@ import crayons
 import re
 
 
-if sys.version_info[0] > 2:
-    open_func = open
-else:
-    open_func = codecs.open
-
+open_func = open if sys.version_info[0] > 2 else codecs.open
 REGEX_RELATIVE_PATTERN = re.compile('from \.')
 
 
@@ -20,11 +16,7 @@ class Node(object):
 
     def __init__(self, name, imports=None, full_path=None, line_no=None):
         self.name = name
-        if not imports:
-            self.imports = []
-        else:
-            self.imports = imports
-
+        self.imports = [] if not imports else imports
         self.line_no = line_no
         self.full_path = full_path
         self.marked = 0
@@ -165,8 +157,7 @@ def check_if_cycles_exist(root):
                                 and item.line_no > item.func_defs[import_obj]:
                             item.is_in_context = True
             previous = item
-            queue.append(item)
-
+            queue.append(previous)
         current_node.marked += 1
 
     return False
